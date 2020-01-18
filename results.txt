@@ -1,0 +1,190 @@
+            gameID teamID opponentID          playerName playerID  \
+0       2018020001      8         10    Artturi Lehkonen  8477476   
+1       2018020001     10          8       Morgan Rielly  8476853   
+2       2018020001      8         10   Brendan Gallagher  8475848   
+3       2018020001     10          8  Jesperi Kotkaniemi  8480829   
+4       2018020001     10          8          Jeff Petry  8473507   
+5       2018020001      8         10         Mike Reilly  8476422   
+6       2018020001      8         10   Brendan Gallagher  8475848   
+7       2018020001      8         10   Brendan Gallagher  8475848   
+8       2018020001      8         10         Mike Reilly  8476422   
+9       2018020001      8         10     Phillip Danault  8476479   
+10      2018020001     10          8        Matthew Peca  8476285   
+11      2018020001     10          8     Kasperi Kapanen  8477953   
+12      2018020001     10          8    Andreas Johnsson  8477341   
+13      2018020001      8         10            Max Domi  8477503   
+14      2018020001     10          8         Victor Mete  8479376   
+15      2018020001      8         10            Max Domi  8477503   
+16      2018020001      8         10    Artturi Lehkonen  8477476   
+17      2018020001     10          8          Zach Hyman  8475786   
+18      2018020001     10          8     Mitchell Marner  8478483   
+19      2018020001      8         10      Igor Ozhiganov  8480943   
+20      2018020001     10          8          Zach Hyman  8475786   
+21      2018020001     10          8     Auston Matthews  8479318   
+22      2018020001      8         10      Nikita Zaitsev  8479458   
+23      2018020001     10          8         Tyler Ennis  8474589   
+24      2018020001     10          8     Patrick Marleau  8466139   
+25      2018020001     10          8     Patrick Marleau  8466139   
+26      2018020001     10          8          Josh Leivo  8476410   
+27      2018020001     10          8     Mitchell Marner  8478483   
+28      2018020001     10          8        John Tavares  8475166   
+29      2018020001     10          8     Auston Matthews  8479318   
+...            ...    ...        ...                 ...      ...   
+147171  2018021271     28         21    Sven Andrighetto  8477413   
+147172  2018021271     28         21        Kevin Labanc  8478099   
+147173  2018021271     21         28         Tomas Hertl  8476881   
+147174  2018021271     28         21      Gustav Nyquist  8474679   
+147175  2018021271     21         28   Gabriel Landeskog  8476455   
+147176  2018021271     21         28    Nathan MacKinnon  8477492   
+147177  2018021271     28         21    Nathan MacKinnon  8477492   
+147178  2018021271     21         28   Alexander Kerfoot  8477021   
+147179  2018021271     21         28          Tyson Jost  8479370   
+147180  2018021271     21         28          Matt Nieto  8476442   
+147181  2018021271     28         21      Gustav Nyquist  8474679   
+147182  2018021271     28         21       Samuel Girard  8479398   
+147183  2018021271     21         28        J.T. Compher  8477456   
+147184  2018021271     28         21        Colin Wilson  8474569   
+147185  2018021271     21         28    Nathan MacKinnon  8477492   
+147186  2018021271     28         21    Nathan MacKinnon  8477492   
+147187  2018021271     21         28   Alexander Kerfoot  8477021   
+147188  2018021271     21         28    Nathan MacKinnon  8477492   
+147189  2018021271     28         21    Nathan MacKinnon  8477492   
+147190  2018021271     21         28     Derick Brassard  8473544   
+147191  2018021271     28         21     Derick Brassard  8473544   
+147192  2018021271     21         28        Evander Kane  8475169   
+147193  2018021271     28         21        Joe Pavelski  8470794   
+147194  2018021271     28         21   Gabriel Landeskog  8476455   
+147195  2018021271     21         28   Gabriel Landeskog  8476455   
+147196  2018021271     21         28    Nathan MacKinnon  8477492   
+147197  2018021271     21         28   Gabriel Landeskog  8476455   
+147198  2018021271     21         28   Gabriel Landeskog  8476455   
+147199  2018021271     21         28      Carl Soderberg  8471262   
+147200  2018021271     28         21       Micheal Haley  8474230   
+
+              result  Xcoord  Ycoord period   time shooterTeamGoals  \
+0               Shot    78.0   -19.0      1  00:29                0   
+1               Shot   -37.0   -10.0      1  00:49                0   
+2               Shot    47.0   -23.0      1  01:00                0   
+3       Blocked Shot    56.0    15.0      1  02:00                0   
+4       Blocked Shot    72.0    -6.0      1  03:16                0   
+5        Missed Shot    73.0    22.0      1  03:49                0   
+6               Shot    53.0    14.0      1  03:54                0   
+7        Missed Shot    81.0    -4.0      1  04:01                0   
+8               Shot    77.0    -2.0      1  04:06                0   
+9               Shot    80.0     1.0      1  04:06                0   
+10      Blocked Shot    73.0    -2.0      1  05:29                0   
+11       Missed Shot   -67.0     4.0      1  05:37                0   
+12       Missed Shot   -75.0    -8.0      1  05:41                0   
+13              Shot    74.0    14.0      1  06:14                0   
+14      Blocked Shot    35.0    16.0      1  09:13                0   
+15       Missed Shot    65.0    13.0      1  09:32                0   
+16              Goal    87.0    -3.0      1  09:34                1   
+17              Shot   -51.0    18.0      1  09:52                0   
+18       Missed Shot   -81.0    14.0      1  09:57                0   
+19      Blocked Shot   -77.0    11.0      1  10:02                1   
+20              Shot   -77.0    -7.0      1  10:05                0   
+21       Missed Shot   -72.0    -1.0      1  10:13                0   
+22      Blocked Shot   -80.0    15.0      1  10:22                1   
+23              Shot   -57.0    28.0      1  10:28                0   
+24              Shot   -82.0     3.0      1  11:17                0   
+25       Missed Shot   -72.0    -3.0      1  11:25                0   
+26       Missed Shot   -37.0    36.0      1  11:35                0   
+27       Missed Shot   -68.0    13.0      1  12:15                0   
+28              Shot   -70.0     4.0      1  12:49                0   
+29              Goal   -64.0   -14.0      1  12:57                1   
+...              ...     ...     ...    ...    ...              ...   
+147171  Blocked Shot   -62.0    -3.0      3  04:46                3   
+147172   Missed Shot    67.0   -15.0      3  05:20                3   
+147173  Blocked Shot    73.0    -1.0      3  05:33                2   
+147174          Goal    71.0    -9.0      3  05:38                4   
+147175   Missed Shot   -75.0    -2.0      3  06:39                2   
+147176          Shot   -56.0   -20.0      3  06:50                2   
+147177  Blocked Shot   -54.0   -12.0      3  07:03                4   
+147178   Missed Shot   -79.0     6.0      3  07:16                2   
+147179   Missed Shot   -48.0   -14.0      3  08:15                2   
+147180   Missed Shot   -61.0    -5.0      3  08:27                2   
+147181   Missed Shot    80.0   -20.0      3  09:14                4   
+147182  Blocked Shot   -45.0   -15.0      3  09:41                4   
+147183   Missed Shot   -81.0    -6.0      3  10:51                2   
+147184  Blocked Shot   -86.0     2.0      3  10:52                4   
+147185   Missed Shot   -52.0    -2.0      3  11:25                2   
+147186  Blocked Shot   -64.0    -1.0      3  11:26                4   
+147187          Shot   -59.0    -1.0      3  12:56                2   
+147188          Shot   -82.0    -6.0      3  13:21                2   
+147189  Blocked Shot   -73.0    -6.0      3  13:57                4   
+147190          Shot   -60.0    16.0      3  14:02                2   
+147191  Blocked Shot   -55.0    21.0      3  14:10                4   
+147192  Blocked Shot    81.0     0.0      3  14:15                2   
+147193          Shot    67.0   -19.0      3  15:37                4   
+147194  Blocked Shot   -67.0    -6.0      3  15:50                4   
+147195          Shot   -78.0     1.0      3  16:33                2   
+147196   Missed Shot   -86.0    29.0      3  17:39                2   
+147197   Missed Shot   -71.0     4.0      3  18:20                2   
+147198          Shot   -82.0    10.0      3  18:39                2   
+147199          Shot   -81.0     1.0      3  18:40                2   
+147200          Goal    74.0     4.0      3  19:15                5   
+
+       opponentGoals             goalie  
+0                  0  Frederik Andersen  
+1                  0        Carey Price  
+2                  0  Frederik Andersen  
+3                  0                NaN  
+4                  0                NaN  
+5                  0                NaN  
+6                  0  Frederik Andersen  
+7                  0                NaN  
+8                  0  Frederik Andersen  
+9                  0  Frederik Andersen  
+10                 0                NaN  
+11                 0                NaN  
+12                 0                NaN  
+13                 0  Frederik Andersen  
+14                 0                NaN  
+15                 0                NaN  
+16                 0  Frederik Andersen  
+17                 1        Carey Price  
+18                 1                NaN  
+19                 0                NaN  
+20                 1        Carey Price  
+21                 1                NaN  
+22                 0                NaN  
+23                 1        Carey Price  
+24                 1        Carey Price  
+25                 1                NaN  
+26                 1                NaN  
+27                 1                NaN  
+28                 1        Carey Price  
+29                 1        Carey Price  
+...              ...                ...  
+147171             2                NaN  
+147172             2                NaN  
+147173             3                NaN  
+147174             2    Semyon Varlamov  
+147175             4                NaN  
+147176             4       Martin Jones  
+147177             2                NaN  
+147178             4                NaN  
+147179             4                NaN  
+147180             4                NaN  
+147181             2                NaN  
+147182             2                NaN  
+147183             4                NaN  
+147184             2                NaN  
+147185             4                NaN  
+147186             2                NaN  
+147187             4       Martin Jones  
+147188             4       Martin Jones  
+147189             2                NaN  
+147190             4       Martin Jones  
+147191             2                NaN  
+147192             4                NaN  
+147193             2    Semyon Varlamov  
+147194             2                NaN  
+147195             4       Martin Jones  
+147196             4                NaN  
+147197             4                NaN  
+147198             4       Martin Jones  
+147199             4       Martin Jones  
+147200             2                NaN  
+
+[147201 rows x 13 columns]
