@@ -27,58 +27,88 @@ def print_graphs(game_id,teams_by_id,schedule,directory):
     for shot in all_shots:
         if shot['result']['event']=="Shot":
             if shot['team']['id'] == home:
-                home_shots = home_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy()),index=[0]))
+                home_shots = home_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(),True),index=[0]))
             else:
-                away_shots = away_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy()),index=[0]))
+                away_shots = away_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(), False),index=[0]))
         elif shot['result']['event']=="Blocked Shot":
             if shot['team']['id'] == home:
-                home_blocked_shots = home_blocked_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy()),index=[0]))
+                home_blocked_shots = home_blocked_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(), True),index=[0]))
             else:
-                away_blocked_shots = away_blocked_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy()),index=[0]))
+                away_blocked_shots = away_blocked_shots.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(), False),index=[0]))
         else: 
             if shot['team']['id'] == home:
-                home_goals = home_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy()),index=[0]))
+                home_goals = home_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(),True),index=[0]))
             else:
-                away_goals = away_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy()),index=[0]))
-    plot_graphs(home_shots,home_blocked_shots,home_goals,teams_by_id[home],schedule['dates'][0]['date'],directory)
-    plot_graphs(away_shots,away_blocked_shots,away_goals,teams_by_id[away],schedule['dates'][0]['date'],directory)
+                away_goals = away_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(),False),index=[0]))
+    fig = plt.figure(figsize=(10,10))
+    plot = fig.add_axes([0.05,0.05,0.4,0.8],polar=True)
+    plot_graphs(plot,home_shots,home_blocked_shots,home_goals,teams_by_id[home],schedule['dates'][0]['date'],directory, True)
+    plot = fig.add_axes([0.45,0.3,0.15,1])
+    plot_table(plot,home_goals,teams_by_id[home],away_goals,teams_by_id[away])
+    plot = fig.add_axes([0.55,0.05,0.4,0.8],polar=True)
+    plot_graphs(plot,away_shots,away_blocked_shots,away_goals,teams_by_id[away],schedule['dates'][0]['date'],directory, False)
+    fig.suptitle(teams_by_id[home] + " vs " + teams_by_id[away])
+    fig.legend(loc=(0.4,0.4))
+    #plt.savefig(directory + "/" + teams_by_id[home] + teams_by_id[away] + "Shots" + schedule['dates'][0]['date'] + '.png')
+    plt.show()
+    plt.close()
 
-def plot_graphs(shots,blocked_shots,goals,team_name,date,directory):
-    fig = plt.figure()
-    plot = fig.add_subplot(111, projection='polar')
-    plot.plot(shots['theta'],shots['r'],"o",c="yellow",label="Shots on Goal")
-    plot.plot(blocked_shots['theta'],blocked_shots['r'],"o",c="red",label="Blocked Shots")
-    plot.plot(goals['theta'],goals['r'],"o",c="green",label="Goals")
-    plot.set_xlim([-(math.pi/2),(math.pi/2)])
-    plot.set_ylim([0,100])
-    crease_cr=pd.DataFrame(toPol(0,4),index=[0])
-    crease_cr=crease_cr.append(pd.DataFrame(toPol(4,4),index=[0]))
-    crease_cr=crease_cr.append(pd.DataFrame(toPol(4,-4),index=[0]))
-    crease_cr=crease_cr.append(pd.DataFrame(toPol(0,-4),index=[0]))
-    plot.plot(crease_cr['theta'],crease_cr['r'],c='blue',label="Crease")
-    #plot.gca().add_artist(plt.Circle((96,0),4,color="b"))
-    #plot.gca().add_artist(plt.Rectangle((96,-4),8,8,color="b"))
-    plt.title(team_name + " Shots")
-    plt.legend(bbox_to_anchor=(1.3,1))
-    plt.savefig(directory + "/" + team_name + " Shots " + date + '.png')
-    plt.close(fig)
+def plot_table(plot,home_goals,home_team,away_goals,away_team):
+    score = [['{:d}'.format(len(home_goals)),'{:d}'.format(len(away_goals))]]
+    #plot.table(cellText=score,loc='top')
+    plot.text(-0.03,0.6,len(home_goals))
+    plot.text(0.8,0.6,len(away_goals))
+    plot.spines['right'].set_visible(False)
+    plot.spines['top'].set_visible(False)
+    plot.spines['left'].set_visible(False)
+    plot.spines['bottom'].set_visible(False)
+    plot.get_xaxis().set_visible(False)
+    plot.get_yaxis().set_visible(False)
+
+def plot_graphs(plot,shots,blocked_shots,goals,team_name,date,directory,home_team):
+    if (home_team):
+        plot.plot(shots['theta'],shots['r'],"o",c="yellow",label="Shots on Goal")
+        plot.plot(blocked_shots['theta'],blocked_shots['r'],"o",c="red",label="Blocked Shots")
+        plot.plot(goals['theta'],goals['r'],"o",c="green",label="Goals")
+        plot.set_thetamin(-90)
+        plot.set_thetamax(90)
+        plot.set_thetagrids([45,0,-45],labels=('',''))
+        crease_cr=pd.DataFrame(toPol(0,4),index=[0])
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(4,4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(4,-4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(0,-4),index=[0]))
+        print(crease_cr['theta'])
+
+    else:
+        plot.plot(shots['theta'],shots['r'],"o",c="yellow")
+        plot.plot(blocked_shots['theta'],blocked_shots['r'],"o",c="red")
+        plot.plot(goals['theta'],goals['r'],"o",c="green")
+        plot.set_thetamin(90)
+        plot.set_thetamax(270)
+        plot.set_thetagrids([135,180,225])#,labels=('',''))
+        crease_cr=pd.DataFrame(toPol(0,-4),index=[0])
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(-4,-4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(-4,4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(0,4),index=[0]))
+        print(180 - crease_cr['theta'])
+
+    plot.set_rmin(0)
+    plot.set_rmax(100)
+    plot.plot(crease_cr['theta'],crease_cr['r'],c='blue')
 
 # get all coordinates as positive and change them to polar coordinates
-def flip2pol(coordinates):
+def flip2pol(coordinates, home):
     if (coordinates['x'] < 0):
         coordinates['x']*=(-1)
-    coordinates['x'] = 100 - coordinates['x']
+    if (home):
+        coordinates['x'] = 100 - coordinates['x']
+    else: 
+        coordinates['x'] = -(100 - coordinates['x'])
     return toPol(coordinates['x'],coordinates['y'])
 
 def toPol(x,y):
     r = np.sqrt((x**2) + (y**2))
-    if(x!=0):
-        theta = np.arctan(y / x)
-    else:
-        if(y > 0):
-            theta = math.pi/2
-        else:
-            theta = -math.pi/2
+    theta = np.arctan2(y, x)
     return {'r':r,'theta':theta}
 
 def get_teams():
