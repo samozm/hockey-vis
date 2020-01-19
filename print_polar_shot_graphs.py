@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-def print_graphs(game_id,teams_by_id,schedule,directory):
+def get_shots(game_id,teams_by_id):
     game = requests.get("https://statsapi.web.nhl.com/api/v1/game/"+str(game_id)+"/feed/live")
     game = game.json()
     home = game['gameData']['teams']['home']['id']
@@ -40,22 +40,23 @@ def print_graphs(game_id,teams_by_id,schedule,directory):
                 home_goals = home_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(),True),index=[0]))
             else:
                 away_goals = away_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(),False),index=[0]))
+    return home,home_goals,home_blocked_shots,home_shots,away,away_goals,away_blocked_shots,away_shots
+
+def print_graphs(home_name,home_goals,home_blocked_shots,home_shots,away_name,away_goals,away_blocked_shots,away_shots,schedule,directory):
     fig = plt.figure(figsize=(10,10))
-    plot = fig.add_axes([0.05,0.05,0.4,0.8],polar=True)
-    plot_graphs(plot,home_shots,home_blocked_shots,home_goals,teams_by_id[home],schedule['dates'][0]['date'],directory, True)
+    plot = fig.add_axes([0.05,0.1,0.45,0.9],polar=True)
+    plot_graphs(plot,home_shots,home_blocked_shots,home_goals,home_name,schedule['dates'][0]['date'],directory, True)
     plot = fig.add_axes([0.45,0.3,0.15,1])
-    plot_table(plot,home_goals,teams_by_id[home],away_goals,teams_by_id[away])
-    plot = fig.add_axes([0.55,0.05,0.4,0.8],polar=True)
-    plot_graphs(plot,away_shots,away_blocked_shots,away_goals,teams_by_id[away],schedule['dates'][0]['date'],directory, False)
-    fig.suptitle(teams_by_id[home] + " vs " + teams_by_id[away])
+    plot_table(plot,home_goals,home_name,away_goals,away_name)
+    plot = fig.add_axes([0.5,0.1,0.45,0.9],polar=True)
+    plot_graphs(plot,away_shots,away_blocked_shots,away_goals,away_name,schedule['dates'][0]['date'],directory, False)
+    fig.suptitle(home_name + " vs " + away_name)
     fig.legend(loc=(0.4,0.4))
-    #plt.savefig(directory + "/" + teams_by_id[home] + teams_by_id[away] + "Shots" + schedule['dates'][0]['date'] + '.png')
-    plt.show()
+    plt.savefig(directory + "/" + home_name + away_name + "Shots" + schedule['dates'][0]['date'] + '.png')
     plt.close()
 
 def plot_table(plot,home_goals,home_team,away_goals,away_team):
     score = [['{:d}'.format(len(home_goals)),'{:d}'.format(len(away_goals))]]
-    #plot.table(cellText=score,loc='top')
     plot.text(-0.03,0.6,len(home_goals))
     plot.text(0.8,0.6,len(away_goals))
     plot.spines['right'].set_visible(False)
@@ -74,10 +75,10 @@ def plot_graphs(plot,shots,blocked_shots,goals,team_name,date,directory,home_tea
         plot.set_thetamax(90)
         plot.set_thetagrids([45,0,-45],labels=('',''))
         crease_cr=pd.DataFrame(toPol(0,4),index=[0])
-        crease_cr=crease_cr.append(pd.DataFrame(toPol(4,4),index=[0]))
-        crease_cr=crease_cr.append(pd.DataFrame(toPol(4,-4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(4.5,4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(4.5,-4),index=[0]))
         crease_cr=crease_cr.append(pd.DataFrame(toPol(0,-4),index=[0]))
-        print(crease_cr['theta'])
+        theta = np.arange(-90,90,0.1)
 
     else:
         plot.plot(shots['theta'],shots['r'],"o",c="yellow")
@@ -85,16 +86,19 @@ def plot_graphs(plot,shots,blocked_shots,goals,team_name,date,directory,home_tea
         plot.plot(goals['theta'],goals['r'],"o",c="green")
         plot.set_thetamin(90)
         plot.set_thetamax(270)
-        plot.set_thetagrids([135,180,225])#,labels=('',''))
+        plot.set_thetagrids([135,180,225],labels=('',''))
         crease_cr=pd.DataFrame(toPol(0,-4),index=[0])
-        crease_cr=crease_cr.append(pd.DataFrame(toPol(-4,-4),index=[0]))
-        crease_cr=crease_cr.append(pd.DataFrame(toPol(-4,4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(-4.5,-4),index=[0]))
+        crease_cr=crease_cr.append(pd.DataFrame(toPol(-4.5,4),index=[0]))
         crease_cr=crease_cr.append(pd.DataFrame(toPol(0,4),index=[0]))
-        print(180 - crease_cr['theta'])
+        theta = np.arange(90,270,0.1)
 
     plot.set_rmin(0)
     plot.set_rmax(100)
-    plot.plot(crease_cr['theta'],crease_cr['r'],c='blue')
+    plot.plot(crease_cr['theta'],crease_cr['r'],c='red')
+    r = [6]*(1800)
+    plot.plot(theta,r,c='red')
+    
 
 # get all coordinates as positive and change them to polar coordinates
 def flip2pol(coordinates, home):
@@ -142,7 +146,10 @@ def main(argv):
         os.mkdir(directory)
     for date in schedule['dates']:
         for gm in date['games']:
-            print_graphs(gm['gamePk'],teams_by_id,schedule,directory)
+            home_id, home_goals,home_blocked_shots,home_shots,away_id,away_goals,away_blocked_shots,away_shots = get_shots(gm['gamePk'],teams_by_id)
+            home_name = teams_by_id[home_id]
+            away_name = teams_by_id[away_id]
+            print_graphs(home_name,home_goals,home_blocked_shots,home_shots,away_name,away_goals,away_blocked_shots,away_shots,schedule,directory)
     plt.close('all')
 
 if __name__ == "__main__":
