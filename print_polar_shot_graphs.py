@@ -42,17 +42,29 @@ def get_shots(game_id,teams_by_id):
                 away_goals = away_goals.append(pd.DataFrame(flip2pol(shot['coordinates'].copy(),False),index=[0]))
     return home,home_goals,home_blocked_shots,home_shots,away,away_goals,away_blocked_shots,away_shots
 
-def print_graphs(home_name,home_goals,home_blocked_shots,home_shots,away_name,away_goals,away_blocked_shots,away_shots,schedule,directory):
-    fig = plt.figure(figsize=(10,10))
-    plot = fig.add_axes([0.05,0.1,0.45,0.9],polar=True)
-    plot_graphs(plot,home_shots,home_blocked_shots,home_goals,home_name,schedule['dates'][0]['date'],directory, True)
+def print_graphs(home_name,home_goals,home_blocked_shots,home_shots,away_name,away_goals,away_blocked_shots,away_shots,schedule,directory,heatmap):
+    fig = plt.figure(figsize=(12,12))
+    if (heatmap):
+        plot = fig.add_axes([0.15,0.3,0.3,0.45])
+        plot_heat(plot,home_shots,home_blocked_shots,home_goals,home_name,schedule['dates'][0]['date'],directory, True)
+    else:
+        plot = fig.add_axes([0.05,0.1,0.45,0.9],polar=True)
+        plot_graphs(plot,home_shots,home_blocked_shots,home_goals,home_name,schedule['dates'][0]['date'],directory, True) 
     plot = fig.add_axes([0.45,0.3,0.15,1])
     plot_table(plot,home_goals,home_name,away_goals,away_name)
-    plot = fig.add_axes([0.5,0.1,0.45,0.9],polar=True)
-    plot_graphs(plot,away_shots,away_blocked_shots,away_goals,away_name,schedule['dates'][0]['date'],directory, False)
+    if (heatmap):
+        plot = fig.add_axes([0.55,0.3,0.3,0.45])
+        plot_heat(plot,away_shots,away_blocked_shots,away_goals,away_name,schedule['dates'][0]['date'],directory, False)
+    else:
+        plot = fig.add_axes([0.5,0.1,0.45,0.9],polar=True)
+        plot_graphs(plot,away_shots,away_blocked_shots,away_goals,away_name,schedule['dates'][0]['date'],directory, False)
     fig.suptitle(home_name + " vs " + away_name)
-    fig.legend(loc=(0.4,0.4))
-    plt.savefig(directory + "/" + home_name + away_name + "Shots" + schedule['dates'][0]['date'] + '.png')
+    if(heatmap):
+        plt.show()
+        #plt.savefig(directory + "/" + home_name + away_name + "Heatmap" + schedule['dates'][0]['date'] + '.png')
+    else:
+        fig.legend(loc=(0.4,0.4))
+        plt.savefig(directory + "/" + home_name + away_name + "Shots" + schedule['dates'][0]['date'] + '.png')
     plt.close()
 
 def plot_table(plot,home_goals,home_team,away_goals,away_team):
@@ -99,6 +111,16 @@ def plot_graphs(plot,shots,blocked_shots,goals,team_name,date,directory,home_tea
     r = [6]*(1800)
     plot.plot(theta,r,c='red')
     
+def plot_heat(plot,shots,blocked_shots,goals,team_name,date,directory,home_team):
+    all_shots = shots.append(blocked_shots).append(goals)
+    all_shots = pd.DataFrame.from_dict(all_shots.apply(fromPol,axis=1))
+    all_shots.drop(columns=['r','theta'])
+    if (home_team):
+        plot.set_xlim(0,50)
+    else:
+        plot.set_xlim(-50,0)
+    plot.set_ylim(-50,50)
+    plot.hist2d(all_shots['x'],all_shots['y'],bins=50,cmap='bwr')
 
 # get all coordinates as positive and change them to polar coordinates
 def flip2pol(coordinates, home):
@@ -115,6 +137,13 @@ def toPol(x,y):
     theta = np.arctan2(y, x)
     return {'r':r,'theta':theta}
 
+def fromPol(col):
+    r = col['r']
+    theta = col['theta']
+    col['x'] = r * np.cos(theta)
+    col['y'] = r * np.sin(theta)
+    return col
+
 def get_teams():
     teams = requests.get("https://statsapi.web.nhl.com/api/v1/teams")
     teams = teams.json()
@@ -125,16 +154,19 @@ def get_teams():
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv,"hd:",["date="])
+        opts, args = getopt.getopt(argv,"hmd:",["map","date="])
     except getopt.GetoptError:
         print('test.py -d <date>, <date> should be in form YYYY-MM-DD')
         sys.exit(2)
+    heatmap = False
     for opt, arg in opts:
         if opt == '-h':
-            print('test.py -d <date>, <date> should be in form YYYY-MM-DD')
+            print('test.py -d <date>, <date> should be in form YYYY-MM-DD, -m --map optional arg to print a heatmap')
             return
         elif opt in ('-d','--date'):
             date=arg
+        elif opt in ('-m','--map'):
+            heatmap = True
     teams_by_id = get_teams()
     if (date):
         schedule = requests.get("https://statsapi.web.nhl.com/api/v1/schedule?date="+str(date))
@@ -144,12 +176,13 @@ def main(argv):
     directory = schedule['dates'][0]['date']
     if not os.path.exists(directory):
         os.mkdir(directory)
+
     for date in schedule['dates']:
         for gm in date['games']:
-            home_id, home_goals,home_blocked_shots,home_shots,away_id,away_goals,away_blocked_shots,away_shots = get_shots(gm['gamePk'],teams_by_id)
+            home_id,home_goals,home_blocked_shots,home_shots,away_id,away_goals,away_blocked_shots,away_shots = get_shots(gm['gamePk'],teams_by_id)
             home_name = teams_by_id[home_id]
             away_name = teams_by_id[away_id]
-            print_graphs(home_name,home_goals,home_blocked_shots,home_shots,away_name,away_goals,away_blocked_shots,away_shots,schedule,directory)
+            print_graphs(home_name,home_goals,home_blocked_shots,home_shots,away_name,away_goals,away_blocked_shots,away_shots,schedule,directory,heatmap)
     plt.close('all')
 
 if __name__ == "__main__":
